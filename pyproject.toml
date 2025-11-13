@@ -1,0 +1,13 @@
+[project]
+name = "07-pub-settlement"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.3.3",
+    "tkinterdnd2>=0.4.3",
+    "ttkbootstrap>=1.18.1",
+    "openpyxl>=3.1",
+    "xlrd==1.2.0",
+]

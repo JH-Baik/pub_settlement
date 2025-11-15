@@ -277,17 +277,13 @@ class SettlementGUI_ttk:
             # 요약 만들기 (가능하면 서점/수량/정산금액 기준)
             summary = "\n\n정산 통합 결과:\n"
             try:
-                store_col = next(c for c in df.columns if c in ("서점", "store"))
-                qty_col = next(c for c in df.columns if c in ("출고수량", "quantity"))
-                amt_col = next(c for c in df.columns if c in ("정산금액", "settlement", "합계금액", "금액"))
+                store_col, qty_col, amt_col = "서점명", "입고수량", "정산액"
                 grp = df.groupby(store_col, dropna=False).agg({qty_col: "sum", amt_col: "sum"}).reset_index()
-                lines = [
-                    f"- {r[store_col]}: 수량 {int(r[qty_col])} / 금액 {int(r[amt_col]):,}원"
-                    for _, r in grp.iterrows()
-                ]
-                summary += f"총 {total}건 처리\n" + "\n".join(lines)
-            except Exception:
-                summary += f"총 {total}건 처리"
+                lines = [f"- {r[store_col]}: 수량 {int(r[qty_col])} / 금액 {int(r[amt_col]):,}원"
+                        for _, r in grp.iterrows()]
+                summary += f"총 {len(df)}건 처리\n" + "\n".join(lines)
+            except Exception as e:
+                summary += f"총 {len(df)}건 처리 (요약 계산 실패: {e})"
 
             msg = ""
             if results:

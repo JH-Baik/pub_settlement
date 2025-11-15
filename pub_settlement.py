@@ -95,11 +95,18 @@ class BookstoreSettlementProcessor:
             for _, row in df.iterrows():
                 q = safe_int(row.get(key_map["수량"], 0))
                 total_amt = safe_int(row.get(key_map["합계금액"], 0))
-                unit = (total_amt / q) if q > 0 else 0
+                unit = round((total_amt / q), 2) if q > 0 else 0.0  # 소수점 2자리
+                product_code = ""
+                if key_map.get("상품코드"):
+                    product_code = str(row.get(key_map["상품코드"]))
+                    if pd.isna(product_code):
+                        product_code = ""
+                    else:
+                        product_code = product_code.strip()
                 record = {
                     "도서명": str(row.get(key_map["상품명"], "")).strip(),
                     "저자명": "",
-                    "ISBN": str(row.get(key_map.get("상품코드", ""), "")).strip() if key_map.get("상품코드") else "",
+                    "ISBN": product_code,  # 문자열로 유지
                     "서점명": "교보문고",
                     "입고수량": q,
                     "단가": unit,
